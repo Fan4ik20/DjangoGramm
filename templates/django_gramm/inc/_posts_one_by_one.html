@@ -1,0 +1,56 @@
+{% load static %}
+{% load thumbnail %}
+{% load post_tags %}
+
+{% for post in posts %}
+    <div class="card mx-auto col-lg-8 col-md-9" id="post_{{ post.pk }}">
+        {% for photo in post.photo_to_post.all %}
+            <div class="card-header">
+                <img class="user_picture rounded-circle"
+                        {% if post.user.picture %}
+                     src="{{ post.user.picture | thumbnail_url:'mini_icon' }}"
+                        {% else %}
+                     src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}"
+                        {% endif %}
+                     alt="user picture">
+                <a href="{{ post.user.get_absolute_url }}">
+                    <p class="username">{{ post.user.username }}</p>
+                </a>
+            </div>
+
+            <a href="{{ post.get_absolute_url }}">
+                <img src="{{ photo.post_image | thumbnail_url:'home_post' }}" class="card-img-top"
+                     alt="post">
+            </a>
+        {% endfor %}
+
+        <div class="card-body" id="post_{{ post.pk }}_additional_info">
+            {% is_liked post request.user as is_liked %}
+
+            {% if is_liked %}
+                <a id="unlike_post_{{ post.pk }}"
+                onclick="likePost('#unlike_post_{{ post.pk }}')"
+                data-request-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}"
+                data-div-to-refresh="#post_{{ post.pk }}_additional_info">
+                    <div class="liked"></div>
+                </a>
+            {% else %}
+                <a id="like_post_{{ post.pk }}"
+                onclick="unlikePost('#like_post_{{ post.pk }}')"
+                data-request-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
+                data-div-to-refresh = "#post_{{ post.pk }}_additional_info"
+                >
+                    <div class="unliked"></div>
+                </a>
+            {% endif %}
+
+            <p class="card-text">
+                {{ post.description }}
+            </p>
+        </div>
+    </div>
+
+    <br>
+{% empty %}
+    <h3 class="text-center">Sorry, there is no posts yet.</h3>
+{% endfor %}

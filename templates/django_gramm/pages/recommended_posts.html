@@ -1,0 +1,16 @@
+{% extends 'django_gramm/base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Recommended Posts
+{% endblock %}
+
+{% block addition_head %}
+    <link rel="stylesheet" href="{% static 'django_gramm/css/posts.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">Recommended posts</h3>
+    {% include 'django_gramm/inc/_posts_in_a_row.html' %}
+{% endblock %}

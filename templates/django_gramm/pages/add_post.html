@@ -1,0 +1,14 @@
+{% extends 'django_gramm/base.html' %}
+
+{% block title %}
+    Add Post
+{% endblock %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ photo_form.as_p }}
+        {{ post_form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Create Post</button>
+    </form>
+{% endblock %}

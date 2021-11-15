@@ -1,0 +1,22 @@
+{% extends 'django_gramm/base.html' %}
+
+{% load static %}
+
+{% block addition_head %}
+    <link rel="stylesheet" href="{% static 'django_gramm/css/user_data.css' %}">
+{% endblock %}
+
+{% block title %}
+    {{ user_to_display.username }} | followers
+{% endblock %}
+
+{% block content %}
+    {% if not users %}
+        <h3 class="text-center">This user has no followers</h3>
+    {% else %}
+        <h3>Followers</h3>
+        {% include 'django_gramm/inc/_users_list.html' %}
+    {% endif %}
+
+
+{% endblock %}

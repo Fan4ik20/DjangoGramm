@@ -1,0 +1,16 @@
+.unliked {
+    background-image: url("../images/icons/like.png");
+    background-repeat: no-repeat;
+
+    min-height: 50px;
+    min-width: 50px;
+
+}
+
+.liked {
+    background-image: url("../images/icons/unlike.png");
+    background-repeat: no-repeat;
+
+    min-height: 50px;
+    min-width: 50px;
+}

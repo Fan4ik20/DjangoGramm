@@ -1,0 +1,15 @@
+{% extends 'django_gramm/base.html' %}
+{% load static %}
+
+{% block addition_head %}
+    <link rel="stylesheet" href="{% static 'django_gramm/css/user_data.css' %}">
+    <link rel="stylesheet" href="{% static 'django_gramm/css/likes.css' %}">
+{% endblock %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block content %}
+    {% include 'django_gramm/inc/_posts_one_by_one.html' %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="shortcut icon"
+          href="{% static 'django_gramm/images/icons/main.png' %}"
+          type="image/png">
+
+    <link rel="stylesheet" href="{% static 'django_gramm/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'django_gramm/css/messages.css' %}">
+
+    <script src="{% static 'django_gramm/js/dist/bundle.js' %}"></script>
+
+    {% block addition_head %}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="wrapper" id="wrapper">
+        {% include 'django_gramm/inc/_navbar.html' %}
+
+        {% include 'django_gramm/inc/_messages.html' %}
+
+        <div class="container col-md-6 mt-4">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+        <div class="push"></div>
+    </div>
+
+    {% include 'django_gramm/inc/_footer.html' %}
+</body>

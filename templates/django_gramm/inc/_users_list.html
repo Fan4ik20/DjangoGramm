@@ -1,0 +1,24 @@
+{% load static %}
+{% load thumbnail %}
+
+<div class="users_list">
+    {% for user_ in users %}
+        <div class="card">
+            <div class="card-header">
+                <img
+                        {% if user_.picture %}
+                            src="{{ user_.picture | thumbnail_url:'mini_icon' }}"
+                        {% else %}
+                            src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}"
+                        {% endif %} width="30px"
+                            class="user_picture rounded-circle" alt="user_pic">
+                <a href="{{ user_.get_absolute_url }}"><p
+                        class="username">{{ user_.username }}</p></a>
+            </div>
+        </div>
+        <br>
+    {% empty %}
+        <h5 class="text-center">Sorry, there are no users</h5>
+    {% endfor %}
+</div>
+

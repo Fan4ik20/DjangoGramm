@@ -1,0 +1,86 @@
+{% load static %}
+{% load thumbnail %}
+
+<div class="container mt-5 d-flex justify-content-center" id="user_data">
+    <div class="card p-2 w-50">
+        <div class="d-flex align-items-center">
+            <div class="image"><img
+                    {% if user_to_display.picture %}
+                        src="{{ user_to_display.picture | thumbnail_url:'icon' }}"
+                    {% else %}
+                        src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}"
+                    {% endif %}
+                        class="rounded-circle" width="155" alt=""></div>
+            <div class="ml-3 w-100">
+                <h4 class="mb-0 mt-0">{{ user_to_display.username }}</h4>
+                <span>{{ user_to_display.description }}</span>
+                <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                    <div class="d-flex flex-column"><span class="articles">Posts</span>
+                        <span class="number1">{{ user_to_display.posts_number }}</span>
+                    </div>
+                    <div class="d-flex flex-column"><span
+                            class="followers">
+                            <a class="link-light"
+                               style="text-decoration: none;"
+                               href="{% url 'django_gramm:followers' user_to_display.username %}">
+                                Followers
+                            </a>
+                        </span> <span
+                            class="number2">{{ user_to_display.followers_number }}</span>
+                    </div>
+                    <div class="d-flex flex-column"><span class="rating">
+                            <a class="link-light"
+                               style="text-decoration: none;"
+                               href="{% url 'django_gramm:following' user_to_display.username %}">
+                                Following
+                            </a>
+                        </span>
+                        <span class="number3">{{ user_to_display.following_number }}</span>
+                    </div>
+                </div>
+                {% if user.username == user_to_display.username %}
+                    <div class="button mt-2 d-flex flex-row align-items-center">
+                        <a href="{% url 'django_gramm:edit_profile' user_to_display.username %}"
+                           class="link-light"
+                           style="text-decoration: none;">
+                            <button class="btn btn-sm btn-primary w-100">
+                                Edit Profile
+                            </button>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="button mt-2 d-flex flex-row align-items-center">
+                        <button class="btn btn-sm btn-outline-primary w-100">
+                            Chat
+                        </button>
+
+                        {% if not is_follow %}
+                            <a id="follow_user"
+                                onclick="followUser()"
+                               class="link-light"
+                               style="text-decoration: none;"
+                            data-request-url="{% url 'django_gramm:follow' user_to_display.username %}"
+                            data-div-to-refresh="#user_data">
+                                <button class="btn btn-sm btn-primary w-100 ml-2">
+                                    Follow
+                                </button>
+                            </a>
+                        {% else %}
+                            <a id="unfollow_user"
+                                onclick="unfollowUser()"
+                               class="link-light"
+                               style="text-decoration: none;"
+                               data-request-url="{% url 'django_gramm:unfollow' user_to_display.username %}"
+                               data-div-to-refresh="#user_data">
+                                <button class="btn btn-sm btn-primary w-100 ml-2">
+                                    Unfollow
+                                </button>
+                            </a>
+                        {% endif %}
+
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

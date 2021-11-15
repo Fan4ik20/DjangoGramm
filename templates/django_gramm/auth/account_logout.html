@@ -1,0 +1,12 @@
+{% extends 'django_gramm/base.html' %}
+
+{% block title %}
+    Logout
+{% endblock %}
+
+{% block content %}
+    <h1>Logged out</h1>
+
+    <p>Thanks for spending some quality time with the Django Gramm.</p>
+    <a href="{% url 'django_gramm:login' %}">Log in Again</a>
+{% endblock %}

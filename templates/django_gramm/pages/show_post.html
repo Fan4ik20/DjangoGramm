@@ -1,0 +1,131 @@
+{% extends 'django_gramm/base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block addition_head %}
+    <link rel="stylesheet" href="{% static 'django_gramm/css/post.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'django_gramm/css/user_data.css' %}">
+    <link rel="stylesheet" href="{% static 'django_gramm/css/likes.css' %}">
+{% endblock %}
+
+{% block title %}
+    {{ users_post }} | Post
+{% endblock %}
+
+{% block content %}
+    <div class="post mx-auto" id="post">
+        {% for photo in photos %}
+            <div class="post_images">
+                <a href="{{ photo.post_image.url }}"><img
+                        src="{{ photo.post_image.url }}"
+                        alt="..."></a>
+            </div>
+        {% endfor %}
+        <div class="post_body" id="post_data">
+            <div class="user_data">
+                <img class="user_picture rounded-circle"
+                        {% if post.user.picture %}
+                     src="{{ post.user.picture | thumbnail_url:'mini_icon' }}"
+                        {% else %}
+                     src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}"
+                        {% endif %}
+                     alt="user picture">
+                <a href="{{ post.user.get_absolute_url }}">
+                    <p class="username">{{ post.user.username }}</p>
+                </a>
+            </div>
+
+            <div class="row comments mx-auto" id="comments">
+                <div class="pb-4">
+                    <p class="card-text mb-4">{{ post.description }}</p>
+                    {% if comments %}
+                        <br>
+                        <h5>Comments</h5>
+                    {% endif %}
+                    {% for comment in comments %}
+                        <div class="comment mt-2 text-justify float-left">
+                            <img
+                                    {% if comment.user.picture %}
+                                        src="{{ comment.user.picture | thumbnail_url:'mini_icon' }}"
+                                    {% else %}
+                                        src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}"
+                                    {% endif %}
+                                        alt="" class="rounded-circle"
+                                        width="40"
+                                        height="40">
+                            <a class="text-decoration-none"
+                               href="{{ comment.user.get_absolute_url }}">
+                                <p class="text-dark">{{ comment.user.username }}</p>
+                            </a>
+                            <p>{{ comment.created_date | date:"H:i d m Y" }}</p>
+                            <p><strong>{{ comment.content }}</strong></p>
+
+                            {% if user.pk == comment.user.pk or user.pk == post.user.pk %}
+                                <a id="delete_comment_{{ comment.pk }}"
+                                   onclick="deleteComment('#delete_comment_{{ comment.pk }}')"
+                                   data-request-url="{% url 'django_gramm:delete_comment' post.user.username post.pk comment.pk %}"
+                                   data-div-to-refresh="#comments"
+                                >
+                                    <img height="30"
+                                         src="{% static 'django_gramm/images/icons/delete.png' %}"
+                                         alt="delete comment">
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="additional_info" id="post_additional_info">
+                <div class="post_icons" id="post_icons">
+                    {% if not is_liked %}
+                        <a id="like_post"
+                           onclick="likePost('#like_post')"
+                           data-request-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
+                           data-div-to-refresh="#post_additional_info">
+
+                            <div class="unliked"></div>
+                        </a>
+
+                    {% else %}
+                        <a id="unlike_post"
+                           onclick="unlikePost('#unlike_post')"
+                           data-request-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}"
+                           data-div-to-refresh="#post_additional_info">
+
+                            <div class="liked"></div>
+                        </a>
+
+                    {% endif %}
+
+                    {% if user.is_authenticated and user.pk == post.user.pk %}
+                        <br>
+                        <form method="post" action="{% url 'django_gramm:delete_post' post.user.username post.pk %}">
+                            {% csrf_token %}
+                            <input type="image" height="30"
+                                   src="{% static 'django_gramm/images/icons/delete.png' %}"
+                                   alt="delete post">
+                        </form>
+                    {% endif %}
+                </div>
+
+                <p class="likes_count">Likes - {{ post.likes_count }}</p>
+
+                <form method="post" id="comment_form"
+                      action="javascript:postComment()"
+                      data-request-url="{% url 'django_gramm:add_comment' post.user.username post.pk %}"
+                      data-div-to-refresh="#post_data">
+                    <div class="comment_input">
+                        {{ comment_form }}
+                        <button type="submit"
+                                class="btn btn-primary btn-block">
+                            Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

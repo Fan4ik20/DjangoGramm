@@ -1,0 +1,34 @@
+{% load static %}
+{% load thumbnail %}
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for post in posts %}
+        <div class="col">
+            <div class="card"
+                 style="min-height: 300px; position: relative;">
+                <a href="{{ post.get_absolute_url }}">
+                    {% for photo in post.photo_to_post.all %}
+
+                        <div class="photo_layout post_image"
+                             style="background-image: url('{{ photo.post_image | thumbnail_url:'profile_post' }}')">
+                        </div>
+
+
+                    {% endfor %}
+
+                    <div class="photo_layout hover_post_data">
+                        <div class="post_data">
+                            <img src="{% static 'django_gramm/images/icons/like-white-full-2-24.png' %}"
+                                 alt="likes">
+                            - {{ post.likes_count }}
+                            <img src="{% static 'django_gramm/images/icons/comment-white-2-24.png' %}"
+                                 alt="comments">
+                            - {{ post.comments_count }}
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    {% endfor %}
+</div>

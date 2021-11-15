@@ -1,0 +1,12 @@
+{% extends 'django_gramm/base.html' %}
+{% load static %}
+
+{% block addition_head %}
+    <link rel="stylesheet" href="{% static 'django_gramm/css/posts.css' %}">
+    <link rel="stylesheet" href="{% static 'django_gramm/css/likes.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    <a><div class="liked"></div></a>
+{% endblock %}

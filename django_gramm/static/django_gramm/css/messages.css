@@ -1,0 +1,10 @@
+.messages_disappear {
+    position: absolute;
+    z-index: 100;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 50%;
+}

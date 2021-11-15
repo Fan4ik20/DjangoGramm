@@ -1,0 +1,74 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'django_gramm:index' %}">DjangoGram</a>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page"
+                           href="{% url 'django_gramm:index' %}">
+                            Home
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page"
+                               href="{{ user.get_absolute_url }}">
+                                Profile
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page"
+                               href="{% url 'django_gramm:recommended_posts' %}">
+                                Recommended posts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page"
+                               href="{% url 'django_gramm:add_post' user.username %}">
+                                Add new post
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <span class="navbar-text">
+                        {% if request.user.is_authenticated %}
+                            Hello, {{ user.username }}
+                            |
+                            <a href="{% url 'django_gramm:logout' %}">Logout</a>
+                        {% else %}
+                            <a href="{% url 'django_gramm:registration' %}">Registration</a>
+                            |
+                            <a href="{% url 'django_gramm:login' %}">Login</a>
+                        {% endif %}
+                    </span>
+
+            </div>
+
+            {% if request.user.is_authenticated %}
+                <a class="nav-link disabled"
+                   href="{% url 'django_gramm:direct' user.username %}">Direct</a>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <form class="d-flex" method="POST"
+                      action="{% url 'django_gramm:search_users' %}">
+                    {% csrf_token %}
+                    <input name="searched_users" class="form-control me-2"
+                           type="search" placeholder="Search users"
+                           aria-label="Search">
+                    <button class="btn btn-outline-secondary" type="submit">
+                        Search
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </nav>
+</header>

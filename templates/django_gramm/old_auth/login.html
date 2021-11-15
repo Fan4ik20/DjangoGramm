@@ -1,0 +1,14 @@
+{% extends 'django_gramm/base.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block content %}
+        <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+    <a href="{% url 'django_gramm:password_reset' %}">Forgot Password?</a>
+{% endblock %}

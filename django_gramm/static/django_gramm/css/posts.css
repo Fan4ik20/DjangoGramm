@@ -1,0 +1,42 @@
+.post_image {
+    width: 100%;
+    height: 100%;
+
+    background-size: cover;
+    background-position: center;
+}
+
+.hover_post_data {
+    width: 100%;
+    min-height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    text-align: center;
+
+    opacity: 0;
+}
+
+.hover_post_data:hover {
+    opacity: 1;
+}
+
+.photo_layout {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.post_data {
+    text-decoration: none;
+    color: white;
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

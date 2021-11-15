@@ -1,0 +1,12 @@
+{% extends 'django_gramm/base.html' %}
+
+{% block content %}
+    <main class="form-signin">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form }}
+
+            <input type="submit">
+        </form>
+    </main>
+{% endblock %}
