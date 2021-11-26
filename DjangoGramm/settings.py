@@ -28,7 +28,7 @@ SECRET_KEY = ('django-insecure-!-63ksruwvk@_c2+o@#-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-PRODUCTION = False
+PRODUCTION = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 
     'storages',
 
@@ -185,6 +186,14 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': ''
         }
     },
+
+    'github': {
+        'APP': {
+            'client_id': 'd80b7324548ecf2e94f2',
+            'secret': 'ed9d9e69bfe06e885571f3d62810225f51c3ddaa',
+            'key': ''
+        },
+    }
 }
 
 SITE_ID = 1

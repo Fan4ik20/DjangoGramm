@@ -36,15 +36,41 @@
                 </a>
             </div>
 
-            <div class="row comments mx-auto" id="comments">
-                <div class="pb-4">
-                    <p class="card-text mb-4">{{ post.description }}</p>
-                    {% if comments %}
-                        <br>
-                        <h5>Comments</h5>
-                    {% endif %}
+            <div class="row comments mx-auto">
+                <p class="card-text mb-4">{{ post.description }}</p>
+
+                <div id="comments" class="pb-4">
+                    <div id="hidden_comment_template" style="display: none;"
+                         class="comment mt-2 text-justify float-left">
+                        <img
+                                src="{% static 'django_gramm/images/icons/default_picture.jpeg' %}" slot="user_image"
+                                alt="user picture" class="rounded-circle"
+                                width="40"
+                                height="40">
+
+                        <a class="text-decoration-none" slot="user_link"
+                           href="{{ comment.user.get_absolute_url }}">
+                            <p class="text-dark" slot="username">Username</p>
+                        </a>
+
+                        <p slot="comment_created_date">Created date</p>
+                        <p><strong slot="comment_content">Content</strong></p>
+
+                        <a id=""
+                           slot="delete_comment"
+                           onclick=""
+                           data-request-url=""
+                           data-comment-tag-id="">
+                            <img height="30"
+                                 src="{% static 'django_gramm/images/icons/delete.png' %}"
+                                 alt="delete comment">
+                        </a>
+                    </div>
+
+
                     {% for comment in comments %}
-                        <div class="comment mt-2 text-justify float-left">
+                        <div id="comment_{{ comment.pk }}"
+                             class="comment mt-2 text-justify float-left">
                             <img
                                     {% if comment.user.picture %}
                                         src="{{ comment.user.picture | thumbnail_url:'mini_icon' }}"
@@ -58,15 +84,16 @@
                                href="{{ comment.user.get_absolute_url }}">
                                 <p class="text-dark">{{ comment.user.username }}</p>
                             </a>
-                            <p>{{ comment.created_date | date:"H:i d m Y" }}</p>
+                            <p>{{ comment.created_date | date:"H:i d/m Y" }}</p>
+
                             <p><strong>{{ comment.content }}</strong></p>
 
                             {% if user.pk == comment.user.pk or user.pk == post.user.pk %}
                                 <a id="delete_comment_{{ comment.pk }}"
                                    onclick="deleteComment('#delete_comment_{{ comment.pk }}')"
                                    data-request-url="{% url 'django_gramm:delete_comment' post.user.username post.pk comment.pk %}"
-                                   data-div-to-refresh="#comments"
-                                >
+                                   data-comment-tag-id="#comment_{{ comment.pk }}">
+
                                     <img height="30"
                                          src="{% static 'django_gramm/images/icons/delete.png' %}"
                                          alt="delete comment">
@@ -80,29 +107,24 @@
 
             <div class="additional_info" id="post_additional_info">
                 <div class="post_icons" id="post_icons">
-                    {% if not is_liked %}
-                        <a id="like_post"
-                           onclick="likePost('#like_post')"
-                           data-request-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
-                           data-div-to-refresh="#post_additional_info">
-
-                            <div class="unliked"></div>
-                        </a>
-
-                    {% else %}
-                        <a id="unlike_post"
-                           onclick="unlikePost('#unlike_post')"
-                           data-request-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}"
-                           data-div-to-refresh="#post_additional_info">
-
-                            <div class="liked"></div>
-                        </a>
-
-                    {% endif %}
+                    <a id="like_unlike_post"
+                       onclick="likeUnlikePost('#like_unlike_post', '#likedUnliked')"
+                       data-unlike-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}"
+                       data-like-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
+                       data-likes-count-id="#likesCount">
+                        <div id="likedUnliked"
+                                {% if is_liked %}
+                             class="liked"
+                                {% else %}
+                             class="unliked"
+                                {% endif %}>
+                        </div>
+                    </a>
 
                     {% if user.is_authenticated and user.pk == post.user.pk %}
                         <br>
-                        <form method="post" action="{% url 'django_gramm:delete_post' post.user.username post.pk %}">
+                        <form method="post"
+                              action="{% url 'django_gramm:delete_post' post.user.username post.pk %}">
                             {% csrf_token %}
                             <input type="image" height="30"
                                    src="{% static 'django_gramm/images/icons/delete.png' %}"
@@ -111,12 +133,13 @@
                     {% endif %}
                 </div>
 
-                <p class="likes_count">Likes - {{ post.likes_count }}</p>
+                <p class="likes_count">Likes - <span
+                        id="likesCount">{{ post.likes_count }}</span></p>
 
                 <form method="post" id="comment_form"
-                      action="javascript:postComment()"
-                      data-request-url="{% url 'django_gramm:add_comment' post.user.username post.pk %}"
-                      data-div-to-refresh="#post_data">
+                      action="javascript:postComment('#comment_form')"
+                      data-post-comment-url="{% url 'django_gramm:add_comment' post.user.username post.pk %}"
+                      data-comments-id="#comments">
                     <div class="comment_input">
                         {{ comment_form }}
                         <button type="submit"

@@ -1,29 +1,65 @@
-import {sendRequestAndRefreshContent} from './requestFunc'
+import {
+    _sendRequestAndCheckStatus
+} from './requestFunc'
+
 import {parseDataAttrs} from "./parseDataAttrs";
 
 
 class LikeUnlikeFunc {
-    static _sendRequest(dataAttrs, message) {
-        sendRequestAndRefreshContent(
-            dataAttrs.requestUrl, dataAttrs.divToRefresh,
-            message
-        )
+    static _sendRequestAndChangeCssClass(
+        urlToRequest, likeTag, classToAdd, classToRemove,
+        alertMessage, likesCountTag) {
 
+        try {
+            _sendRequestAndCheckStatus(urlToRequest).done(() => {
+                likeTag.removeClass(classToRemove);
+                likeTag.addClass(classToAdd);
+
+                if (likesCountTag) {
+                    let likesCount = parseInt(likesCountTag.text())
+                    let newLikesCount = classToAdd === 'liked' ? ++likesCount : --likesCount;
+
+                    likesCountTag.text(newLikesCount);
+
+                }
+            })
+        }
+
+        catch (error) {
+            alert(alertMessage);
+        }
     }
 
-    static likePost(likeTagId) {
-        let dataAttrs = parseDataAttrs(likeTagId);
+    static _checkLikedUnlikedCssClassesAndCallRequest(likeTagId, dataAttrs) {
+        let likeTag = $(likeTagId);
+        let likesCountTag = $(dataAttrs['likesCountId'])
 
-        LikeUnlikeFunc._sendRequest(dataAttrs,
-            'You cannot like this post at this moment.')
+        if (likeTag.hasClass('liked')) {
+            LikeUnlikeFunc._sendRequestAndChangeCssClass(
+                dataAttrs['unlikeUrl'], likeTag, 'unliked', 'liked',
+                'You can\'t unlike this post at this moment.',
+                likesCountTag
+            );
+        }
+
+        else if (likeTag.hasClass('unliked')) {
+            LikeUnlikeFunc._sendRequestAndChangeCssClass(
+                dataAttrs['likeUrl'], likeTag, 'liked', 'unliked',
+                'You can\'t like this post at this moment.',
+                likesCountTag
+            );
+        }
     }
 
-        static unlikePost(unlikeTagId) {
-            let dataAttrs = parseDataAttrs(unlikeTagId);
+    static likeUnlikePost(tagIdToParse, likeUnlikeTagId) {
+        let dataAttrs = parseDataAttrs(tagIdToParse,
+            'likeUrl', 'unlikeUrl', 'likesCountId');
 
-            LikeUnlikeFunc._sendRequest(dataAttrs,
-            'You cannot unlike this post at this moment.')
+        LikeUnlikeFunc._checkLikedUnlikedCssClassesAndCallRequest(
+            likeUnlikeTagId, dataAttrs
+        );
     }
 }
+
 
 export {LikeUnlikeFunc};

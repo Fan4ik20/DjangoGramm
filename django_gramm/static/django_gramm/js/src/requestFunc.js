@@ -87,4 +87,4 @@ function sendRequestAndRefreshContent(
     }
 }
 
-export {sendRequestAndRefreshContent}
+export {sendRequestAndRefreshContent, _sendRequestAndCheckStatus}

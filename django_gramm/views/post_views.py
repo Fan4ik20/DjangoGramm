@@ -94,9 +94,35 @@ class AddCommentToPostJson(SignInRequiredMixin, BaseFormView):
 
         content = form.cleaned_data['content']
 
-        CommentManager.add_comment(self.request.user, post, content)
+        comment = CommentManager.add_comment(self.request.user, post, content)
 
-        return JsonResponse({'status': 'OK', 'code': 200})
+        user_id = comment.user.pk
+        username = comment.user.username
+        user_image = comment.user.picture.url if comment.user.picture else None
+
+        content = comment.content
+        created_time = comment.created_date
+
+        post_id = comment.post.pk
+
+        return JsonResponse(
+            {
+                'status': 'OK', 'code': 200,
+                'comment': {
+                    'user': {
+                        'id': user_id,
+                        'username': username,
+                        'user_image': user_image,
+                    },
+
+                    'id': comment.pk,
+                    'content': content,
+                    'created_time': created_time,
+
+                    'post_id': post_id,
+                }
+            }
+        )
 
     def form_invalid(self, form):
         return JsonResponse({'status': 'ERROR', 'code': 400})
@@ -109,7 +135,7 @@ class DeleteCommentJson(SignInRequiredMixin, View):
             request, user_slug: str, post_id: int, comment_id: int):
 
         if request.method != 'POST':
-            return JsonResponse({'status': 'ERROR', 'code': 404})
+            return JsonResponse({'status': 'ERROR', 'code': 405})
 
         post = get_object_or_404(PostManager.get_posts_with_comments(),
                                  pk=post_id)
@@ -122,8 +148,6 @@ class DeleteCommentJson(SignInRequiredMixin, View):
             return JsonResponse({'status': 'ERROR', 'code': 403})
 
         CommentManager.delete_comment(comment)
-
-        messages.success(request, 'The comment was successfully deleted')
 
         return JsonResponse({'status': 'OK', 'code': 200})
 

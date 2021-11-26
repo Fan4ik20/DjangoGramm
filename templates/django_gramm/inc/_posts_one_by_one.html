@@ -25,24 +25,21 @@
         {% endfor %}
 
         <div class="card-body" id="post_{{ post.pk }}_additional_info">
-            {% is_liked post request.user as is_liked %}
+            <a id="like_unlike_post_{{ post.pk }}"
+                onclick="likeUnlikePost('#like_unlike_post_{{ post.pk }}',
+                        '#likedUnlikedPost_{{ post.pk }}')"
+                data-like-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
+                data-unlike-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}">
 
-            {% if is_liked %}
-                <a id="unlike_post_{{ post.pk }}"
-                onclick="likePost('#unlike_post_{{ post.pk }}')"
-                data-request-url="{% url 'django_gramm:unlike_post' post.user.pk post.pk %}"
-                data-div-to-refresh="#post_{{ post.pk }}_additional_info">
-                    <div class="liked"></div>
-                </a>
-            {% else %}
-                <a id="like_post_{{ post.pk }}"
-                onclick="unlikePost('#like_post_{{ post.pk }}')"
-                data-request-url="{% url 'django_gramm:like_post' post.user.pk post.pk %}"
-                data-div-to-refresh = "#post_{{ post.pk }}_additional_info"
-                >
-                    <div class="unliked"></div>
-                </a>
-            {% endif %}
+                <div id="likedUnlikedPost_{{ post.pk }}"
+                    {% if post.is_liked %}
+                        class="liked"
+                    {% else %}
+                        class="unliked"
+                    {% endif %}>
+
+                </div>
+            </a>
 
             <p class="card-text">
                 {{ post.description }}

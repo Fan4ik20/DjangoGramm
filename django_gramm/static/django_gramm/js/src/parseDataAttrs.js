@@ -1,10 +1,13 @@
-function parseDataAttrs(tagIdToParse) {
+function parseDataAttrs(tagIdToParse, ...argumentsToParse) {
     let tag = $(tagIdToParse);
 
-    let requestUrl = tag.data("requestUrl");
-    let divToRefresh = tag.data("divToRefresh")
+    let dataArgs = {};
 
-    return {requestUrl: requestUrl, divToRefresh: divToRefresh}
+    argumentsToParse.forEach((arg) => {
+        dataArgs[arg] = tag.data(arg);
+    });
+
+    return dataArgs;
 }
 
 

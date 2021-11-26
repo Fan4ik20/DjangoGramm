@@ -89,15 +89,17 @@ class PostManager:
     def get_following_users_posts(
             follower: User) -> Union[QuerySet, List[Post]]:
 
-        posts = Post.objects.filter(
-            user__in=follower.following.all()
+        posts = Post.objects.all().extra(select={
+            'is_liked': (
+                'select true from "django_gramm_post_likes" '
+                'where post_id=django_gramm_post.id '
+                'and django_gramm_post_likes.user_id = %s'
+            )
+        },
+            select_params=(follower.id,)
         ).prefetch_related(
             'photo_to_post'
-        ).prefetch_related(
-            'likes'
-        ).select_related(
-            'user'
-        )
+        ).select_related('user')
 
         return posts
 

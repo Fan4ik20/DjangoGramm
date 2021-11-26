@@ -3,6 +3,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
 import allauth.account.views as account_views
+from allauth.socialaccount.views import SignupView as SignUpOauth
 
 from django_gramm.forms import (
     PasswordEditForm, UserPasswordResetForm,
@@ -24,6 +25,10 @@ class UserRegistration(account_views.SignupView):
         context['login_url'] = reverse_lazy('django_gramm:login')
 
         return context
+
+
+class UserRegistrationOauth(SignUpOauth):
+    template_name = 'django_gramm/auth/account_registration_oauth.html'
 
 
 class UserLogin(account_views.LoginView):

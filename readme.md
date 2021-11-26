@@ -32,7 +32,7 @@ At the cli just type:
     1. You must set your own database settings.
 
 3. Env Variables
-    1. You must determine all Env variables that uses in setting.py
+    1. You must determine all Env variables that uses in settings.py
 
 ## Running.
 After small project settings you can start the server with the command from the root dir  

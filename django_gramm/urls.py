@@ -6,6 +6,8 @@ from django_gramm.views import (
 
 from django.views.generic import TemplateView
 
+from allauth.socialaccount.views import SignupView as SignUpOauth
+
 app_name = 'django_gramm'
 
 urlpatterns = [
@@ -24,8 +26,7 @@ urlpatterns = [
     path('accounts/logout/', auth_views.UserLogout.as_view(), name='logout'),
 
     path(
-        'users/password/', auth_views.ChangeUserPassword.as_view(),
-        name='change_password'
+        'accounts/social/signup/', auth_views.UserRegistrationOauth.as_view(),
     ),
 
     # User pages.
@@ -41,6 +42,12 @@ urlpatterns = [
     path(
         'users/<slug:user_slug>/edit/', user_views.EditUserProfile.as_view(),
         name='edit_profile'
+    ),
+
+    path(
+        'users/<slug:user_slug>/password/',
+        auth_views.ChangeUserPassword.as_view(),
+        name='change_password'
     ),
 
     # Password Resetting.
